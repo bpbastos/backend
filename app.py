@@ -9,6 +9,7 @@ from model import Session, Tarefa, Categoria
 from schema.tarefa import TarefaIDSchema, TarefaSchema, TarefaListSchema, TarefaViewSchema
 from schema.categoria import CategoriaListSchema
 from schema.erro import ErroSchema
+from logger import logger
 
 info = Info(title="API - Gerenciamento de Tarefas - MVP", version="1.0.0")
 app = OpenAPI(__name__, info=info)
@@ -41,15 +42,20 @@ def adicionar_tarefa(form: TarefaSchema):
         )
         session.add(tarefa)
         session.commit()
+        logger.debug(f"Adicionando tarefa de titulo: '{tarefa.titulo}'\n {str(e)}")
         return form, 200
     except ValidationError as e:
-        return {"mensagem": "requisição inválida"}, 400
+        logger.warning(f"Requisição inválida '{tarefa.titulo}'\n {str(e)}")
+        return {"erro": "requisição inválida"}, 400
     except ValueError as e:
-        return {"mensagem": "requisição inválida"}, 400    
+        logger.warning(f"Requisição inválida '{tarefa.titulo}'\n {str(e)}")
+        return {"erro": "requisição inválida"}, 400    
     except IntegrityError as e:
-        return {"mensagem": "erro ao adicionar tarefa"}, 400    
+        logger.warning(f"Erro ao adicionar tarefa '{tarefa.titulo}'\n {str(e)}")
+        return {"erro": "erro ao adicionar tarefa"}, 400    
     except Exception as e:
-        return {"mensagem": "erro ao adicionar tarefa"}, 400
+        logger.warning(f"Erro requisição inválida '{tarefa.titulo}'\n {str(e)}")
+        return {"erro": "erro ao adicionar tarefa"}, 400
 
 
 @app.get('/tarefas',tags=[tarefa_tag], responses={"200": TarefaListSchema, "400": ErroSchema})
@@ -72,6 +78,7 @@ def listar_tarefas():
             } for tarefa in session.query(Tarefa).all()
         ]), 200        
     except Exception as e:
+        logger.warning(f"Erro  ao buscar tarefas\n {str(e)}")
         return {"erro": "erro ao buscar tarefas"}, 400
     
 @app.get('/categoria', tags=[categoria_tag], responses={"200": CategoriaListSchema, "400": ErroSchema})
@@ -88,6 +95,7 @@ def listar_categorias():
             } for categoria in session.query(Categoria).all()
         ]), 200        
     except Exception as e:
+        logger.warning(f"Erro  ao buscar categorias\n {str(e)}")
         return {"erro": "erro ao buscar categorias"}, 400    
 
 
@@ -115,6 +123,7 @@ def listar_tarefa(query: TarefaIDSchema):
                 } 
             }]), 200        
     except Exception as e:
+        logger.warning(f"Erro  ao buscar tarefa\n {str(e)}")
         return {"erro": "erro ao buscar tarefa"}, 400
 
 
@@ -144,4 +153,5 @@ def deletar_tarefa(query: TarefaIDSchema):
         else:
             return {"erro":"tarefa não encontrada"}, 400
     except Exception as e:
+        logger.warning(f"Erro ao buscar tarefa\n {str(e)}")
         return {"erro": "erro ao buscar tarefa"}, 400
