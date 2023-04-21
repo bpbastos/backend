@@ -67,6 +67,6 @@ class TarefaListSchema(BaseModel):
 class TarefaPtrSchema(BaseModel):
     """ Define como representação dos parametros de busca da Tarefa
     """
-    id:Optional[int] 
-    titulo: Optional[str]
+    id:Optional[int] = None
+    titulo: Optional[str] = None
 
