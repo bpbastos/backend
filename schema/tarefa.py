@@ -64,8 +64,9 @@ class TarefaListSchema(BaseModel):
     """
     tarefa:List[TarefaViewSchema]    
 
-class TarefaIDSchema(BaseModel):
-    """ Define como representação para o parametro ID da Tarefa
+class TarefaPtrSchema(BaseModel):
+    """ Define como representação dos parametros de busca da Tarefa
     """
-    id:int = 1
+    id:Optional[int] = 1
+    titulo: Optional[str] = "Tarefa 1"
 

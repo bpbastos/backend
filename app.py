@@ -5,8 +5,9 @@ from flask_openapi3 import OpenAPI, Info, Tag
 from flask_cors import CORS
 from flask_pydantic import validate
 from pydantic import ValidationError
+from sqlalchemy import and_
 from model import Session, Tarefa, Categoria
-from schema.tarefa import TarefaIDSchema, TarefaSchema, TarefaListSchema, TarefaViewSchema
+from schema.tarefa import TarefaPtrSchema, TarefaSchema, TarefaListSchema, TarefaViewSchema
 from schema.categoria import CategoriaListSchema
 from schema.erro import ErroSchema
 from logger import logger
@@ -27,7 +28,7 @@ def home():
     """
     return redirect('/openapi')
 
-@app.post('/tarefa', tags=[tarefa_tag], responses={"200": TarefaSchema, "400": ErroSchema})
+@app.post('/tarefa', tags=[tarefa_tag], responses={"200": TarefaViewSchema, "400": ErroSchema})
 def adicionar_tarefa(form: TarefaSchema):
     """Adiciona uma nova Tarefa
     Retorna uma representação da tarefa.
@@ -42,41 +43,54 @@ def adicionar_tarefa(form: TarefaSchema):
         )
         session.add(tarefa)
         session.commit()
-        logger.debug(f"Adicionando tarefa de titulo: '{tarefa.titulo}'\n {str(e)}")
-        return form, 200
+        logger.debug(f"Adicionando tarefa de titulo: '{tarefa.titulo}'")
+        return jsonify([{
+            'id': tarefa.id,            
+            'titulo': tarefa.titulo,
+            'detalhes': tarefa.detalhes,
+            'data_limite': tarefa.data_limite.strftime('%d/%m/%Y'),
+            'categoria': {
+                'id': tarefa.categoria.id,
+                'nome': tarefa.categoria.nome
+            } 
+        }]), 200 
     except ValidationError as e:
+        session.rollback()    
         logger.warning(f"Requisição inválida '{tarefa.titulo}'\n {str(e)}")
         return {"erro": "requisição inválida"}, 400
     except ValueError as e:
+        session.rollback()
         logger.warning(f"Requisição inválida '{tarefa.titulo}'\n {str(e)}")
         return {"erro": "requisição inválida"}, 400    
     except IntegrityError as e:
+        session.rollback()
         logger.warning(f"Erro ao adicionar tarefa '{tarefa.titulo}'\n {str(e)}")
         return {"erro": "erro ao adicionar tarefa"}, 400    
     except Exception as e:
+        session.rollback()
         logger.warning(f"Erro requisição inválida '{tarefa.titulo}'\n {str(e)}")
         return {"erro": "erro ao adicionar tarefa"}, 400
 
 
 @app.get('/tarefas',tags=[tarefa_tag], responses={"200": TarefaListSchema, "400": ErroSchema})
-def listar_tarefas():
+def listar_tarefas(query: TarefaPtrSchema):
     """Faz a busca por todos as Tarefas cadastradas
     Retorna uma representação da listagem de tarefas.
     """      
     session = Session()
     try:
-        return jsonify([
-            {
-                'id': tarefa.id,            
-                'titulo': tarefa.titulo,
-                'detalhes': tarefa.detalhes,
-                'data_limite': tarefa.data_limite.strftime('%d/%m/%Y'),
-                'categoria': {
-                    'id': tarefa.categoria.id,
-                    'nome': tarefa.categoria.nome
-                } 
-            } for tarefa in session.query(Tarefa).all()
-        ]), 200        
+        tarefas = session.query(Tarefa).all()            
+
+        return jsonify([{
+            'id': tarefa.id,            
+            'titulo': tarefa.titulo,
+            'detalhes': tarefa.detalhes,
+            'data_limite': tarefa.data_limite.strftime('%d/%m/%Y'),
+            'categoria': {
+                'id': tarefa.categoria.id,
+                'nome': tarefa.categoria.nome
+            }
+        } for tarefa in tarefas]), 200        
     except Exception as e:
         logger.warning(f"Erro  ao buscar tarefas\n {str(e)}")
         return {"erro": "erro ao buscar tarefas"}, 400
@@ -100,10 +114,10 @@ def listar_categorias():
 
 
 @app.get('/tarefa', tags=[tarefa_tag], responses={"200": TarefaViewSchema, "400": ErroSchema, "404": ErroSchema})
-def listar_tarefa(query: TarefaIDSchema):
+def listar_tarefa(query: TarefaPtrSchema):
     """Faz a busca por uma Tarefa a partir do id da tarefa
     Retorna uma representação da Tarefa.
-    """    
+    """ 
     session = Session()
     try:
         tarefa = session.query(Tarefa).get(query.id)
@@ -128,7 +142,7 @@ def listar_tarefa(query: TarefaIDSchema):
 
 
 @app.delete('/tarefa', tags=[tarefa_tag], responses={"200": TarefaViewSchema, "400": ErroSchema})
-def deletar_tarefa(query: TarefaIDSchema):
+def deletar_tarefa(query: TarefaPtrSchema):
     """Deleta uma Tarefa a partir do id da tarefa
     Retorna uma representação da Tarefa deletada.
     """     
@@ -153,5 +167,6 @@ def deletar_tarefa(query: TarefaIDSchema):
         else:
             return {"erro":"tarefa não encontrada"}, 400
     except Exception as e:
+        session.rollback()
         logger.warning(f"Erro ao buscar tarefa\n {str(e)}")
         return {"erro": "erro ao buscar tarefa"}, 400
