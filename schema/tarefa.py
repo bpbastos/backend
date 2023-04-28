@@ -10,7 +10,7 @@ from model.tarefa import Tarefa
 from schema.categoria import CategoriaSchema
 
 
-class _TarefaSchema(BaseModel):
+class TarefaSchema(BaseModel):
     """
     " Schema responsável pela representação de uma Tarefa no sistema
     " A ideia era fazer todas as validações adicionais como minimo e maximo de caracteres,
@@ -40,7 +40,7 @@ class _TarefaSchema(BaseModel):
             raise ValueError("data_limite inválida") 
         return value
     
-class TarefaSchema(BaseModel):
+class _TarefaSchema(BaseModel):
     """
     " Schema responsável pela representação de uma Tarefa
     """    
@@ -69,4 +69,5 @@ class TarefaPtrSchema(BaseModel):
     """
     id:Optional[int] = None
     titulo: Optional[str] = None
+    categoria_id: Optional[str] = None
 

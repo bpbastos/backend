@@ -1,11 +1,9 @@
 from datetime import datetime
 from sqlite3 import IntegrityError
-from flask import Flask, json, jsonify, redirect, request
+from flask import jsonify, redirect
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask_cors import CORS
-from flask_pydantic import validate
 from pydantic import ValidationError
-from sqlalchemy import and_
 from model import Session, Tarefa, Categoria
 from schema.tarefa import TarefaPtrSchema, TarefaSchema, TarefaListSchema, TarefaViewSchema
 from schema.categoria import CategoriaListSchema
@@ -79,13 +77,16 @@ def listar_tarefa(query: TarefaPtrSchema):
     """      
     session = Session()
     try:
-        #filtro condicional
+        #filtro condicional por titulo, id da tarefa e por id da categoria
         filtros = []
         if query.titulo:
             filtros.append(Tarefa.titulo.ilike(f'%{query.titulo}%'))
         elif query.id:
             filtros.append(Tarefa.id==query.id)    
-            
+        elif query.categoria_id:
+            filtros.append(Tarefa.categoria_id==query.categoria_id)    
+
+        #busca as tarefas no BD utilizando os filtros, se informados    
         tarefas = session.query(Tarefa).filter(*filtros).all()            
 
         return jsonify([{
