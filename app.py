@@ -130,20 +130,19 @@ def deletar_tarefa(query: TarefaPtrSchema):
     try:
         tarefa = session.query(Tarefa).get(query.id)
         if tarefa:
-            json = jsonify([
-                {
-                    'id': tarefa.id,
-                    'titulo': tarefa.titulo,
-                    'detalhes': tarefa.detalhes,
-                    'data_limite': tarefa.data_limite.strftime('%d/%m/%Y'),
-                    'categoria': {
-                        'id': tarefa.categoria.id,
-                        'nome': tarefa.categoria.nome
-                    } 
-                }]), 200             
+            json = jsonify([{
+                'id': tarefa.id,            
+                'titulo': tarefa.titulo,
+                'detalhes': tarefa.detalhes,
+                'data_limite': tarefa.data_limite.strftime('%d/%m/%Y'),
+                'categoria': {
+                    'id': tarefa.categoria.id,
+                    'nome': tarefa.categoria.nome
+                }
+            }])
             session.query(Tarefa).filter(Tarefa.id == query.id).delete()
-            session.commit()
-            return json
+            session.commit()          
+            return json, 200
         else:
             return {"erro":"tarefa não encontrada"}, 400
     except Exception as e:
