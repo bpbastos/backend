@@ -14,7 +14,7 @@ class TarefaSchema(BaseModel):
     " A ideia era fazer todas as validações adicionais como minimo e maximo de caracteres,
     " além de unicidade no banco e validação de data.
     " Não consegui implementar o tratamento da maneira que gostaria, pois não é possível capturar via try-catch 
-    " quando o 422 acontece, dessa forma não foi possivel normalizar as msgs de erro.
+    " quando o 422 acontece, dessa forma não foi possivel normalizar as msgs de erro ou tratar no lado do servidor.
     " O tratamento ficou do lado do cliente via JavaScript. 
     " Discord - https://discordapp.com/channels/1040258631712653394/1040258632647983204/1097985257954869390
     """

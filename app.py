@@ -76,7 +76,7 @@ def listar_tarefa(query: TarefaPtrSchema):
         tarefas = session.query(Tarefa).filter(*filtros).all()            
 
         return jsonify([{
-            #'id': tarefa.id,            
+            'id': tarefa.id,            
             'titulo': tarefa.titulo,
             'detalhes': tarefa.detalhes,
             'data_limite': tarefa.data_limite.strftime('%d/%m/%Y'),
