@@ -1,6 +1,6 @@
-# Minha API
+# Backend - Gerenciamento de Tarefas - MVP
 
-API - Gerenciamento de Tarefas - MVP
+Esse backend trabalha em conjunto com projeto: Frontend - Gerenciamento de Tarefas - MVP(https://github.com/bpbastos/frontend-mvp-basico)
 
 ---
 ## Como executar 
