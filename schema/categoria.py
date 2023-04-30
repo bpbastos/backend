@@ -2,6 +2,8 @@ from typing import List
 from pydantic import BaseModel
 
 class CategoriaSchema(BaseModel):
+    """ Define como uma categoria será representada.
+    """    
     id: int
     nome:str
 

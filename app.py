@@ -1,9 +1,7 @@
 from datetime import datetime
-from sqlite3 import IntegrityError
 from flask import jsonify, redirect
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask_cors import CORS
-from pydantic import ValidationError
 from model import Session, Tarefa, Categoria
 from schema.tarefa import TarefaPtrSchema, TarefaSchema, TarefaListSchema, TarefaViewSchema
 from schema.categoria import CategoriaListSchema
@@ -78,7 +76,7 @@ def listar_tarefa(query: TarefaPtrSchema):
         tarefas = session.query(Tarefa).filter(*filtros).all()            
 
         return jsonify([{
-            'id': tarefa.id,            
+            #'id': tarefa.id,            
             'titulo': tarefa.titulo,
             'detalhes': tarefa.detalhes,
             'data_limite': tarefa.data_limite.strftime('%d/%m/%Y'),
