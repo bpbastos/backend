@@ -52,18 +52,6 @@ def adicionar_tarefa(form: TarefaSchema):
                 'nome': tarefa.categoria.nome
             } 
         }]), 200 
-    except ValidationError as e:
-        session.rollback()    
-        logger.warning(f"Requisição inválida '{tarefa.titulo}'\n {str(e)}")
-        return {"erro": "requisição inválida"}, 400
-    except ValueError as e:
-        session.rollback()
-        logger.warning(f"Requisição inválida '{tarefa.titulo}'\n {str(e)}")
-        return {"erro": "requisição inválida"}, 400    
-    except IntegrityError as e:
-        session.rollback()
-        logger.warning(f"Erro ao adicionar tarefa '{tarefa.titulo}'\n {str(e)}")
-        return {"erro": "erro ao adicionar tarefa"}, 400    
     except Exception as e:
         session.rollback()
         logger.warning(f"Erro requisição inválida '{tarefa.titulo}'\n {str(e)}")
