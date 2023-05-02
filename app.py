@@ -3,7 +3,7 @@ from flask import jsonify, redirect
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask_cors import CORS
 from model import Session, Tarefa, Categoria
-from schema.tarefa import TarefaPtrSchema, TarefaSchema, TarefaListSchema, TarefaViewSchema
+from schema.tarefa import TarefaDelPtrSchema, TarefaPtrSchema, TarefaSchema, TarefaListSchema, TarefaViewSchema
 from schema.categoria import CategoriaListSchema
 from schema.erro import ErroSchema
 from logger import logger
@@ -108,7 +108,7 @@ def listar_categorias():
 
 
 @app.delete('/tarefa', tags=[tarefa_tag], responses={"200": TarefaViewSchema, "400": ErroSchema})
-def deletar_tarefa(query: TarefaPtrSchema):
+def deletar_tarefa(query: TarefaDelPtrSchema):
     """Deleta uma Tarefa a partir do id da tarefa
     Retorna uma representação da Tarefa deletada.
     """     

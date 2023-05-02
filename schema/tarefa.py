@@ -86,3 +86,7 @@ class TarefaPtrSchema(BaseModel):
     titulo: Optional[str] = None
     categoria_id: Optional[str] = None
 
+class TarefaDelPtrSchema(BaseModel):
+    """ Define como representação dos parametros de deleção da Tarefa
+    """
+    id:int = None
