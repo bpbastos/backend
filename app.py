@@ -8,7 +8,7 @@ from schema.categoria import CategoriaListSchema
 from schema.erro import ErroSchema
 from logger import logger
 
-info = Info(title="API - Gerenciamento de Tarefas - MVP", version="1.0.0")
+info = Info(title="API - Gerenciador de Tarefas - MVP", version="1.0.0")
 app = OpenAPI(__name__, info=info)
 CORS(app)
 

@@ -1,14 +1,33 @@
-# Backend - Gerenciamento de Tarefas - MVP
+# Backend - Gerenciador de Tarefas
 
-Esse backend trabalha em conjunto com projeto: Frontend - Gerenciamento de Tarefas - MVP(https://github.com/bpbastos/frontend-mvp-basico)
+![GitHub repo size](https://img.shields.io/github/repo-size/bpbastos/backend-mvp-basico?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/bpbastos/backend-mvp-basico?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/bpbastos/backend-mvp-basico?style=for-the-badge)
+![Bitbucket open issues](https://img.shields.io/bitbucket/issues/bpbastos/backend-mvp-basico?style=for-the-badge)
+![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/bpbastos/backend-mvp-basico?style=for-the-badge)
 
----
-## Como executar 
+<img src="tela.png" alt="Tela da api">
+
+> Este backend foi desenvolvido como trabalho de conclusão do módulo basico da Pós-Graduação em Desenvolvimento FullStack da PUC-RIO. Ele foi desenvolvido em Python 3 junto com as bibliotecas Flask, SQLAlquemy e Pydantic.
 
 
-Será necessário ter todas as libs python listadas no `requirements.txt` instaladas.
-Após clonar o repositório, é necessário ir ao diretório raiz, pelo terminal, para poder executar os comandos descritos abaixo.
+## 💻 Pré-requisitos
 
+Antes de começar, verifique se você atendeu aos seguintes requisitos:
+<!---Estes são apenas requisitos de exemplo. Adicionar, duplicar ou remover conforme necessário--->
+* Você instalou a versão 3 do `<Python>`
+* Você tem uma máquina `<Windows / Linux / Mac>`. 
+
+## 🚀 Instalando <Gerenciador de Tarefas>
+
+Para instalar, siga estas etapas:
+
+Clone ou faça download do projeto :
+```
+git clone https://github.com/bpbastos/backend-mvp-basico.git
+```
+
+Após clonar o repositório, será necessário fazer a instalação das dependencias da aplicação.
 > É fortemente indicado o uso de ambientes virtuais do tipo [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html).
 
 ```
@@ -23,11 +42,10 @@ Para executar a API  basta executar:
 (env)$ flask run --host 0.0.0.0 --port 5000
 ```
 
-Em modo de desenvolvimento é recomendado executar utilizando o parâmetro reload, que reiniciará o servidor
-automaticamente após uma mudança no código fonte. 
+## ☕ Usando <Gerenciador de Tarefas>
+
+Para usar, siga estas etapas:
 
 ```
-(env)$ flask run --host 0.0.0.0 --port 5000 --reload
+Abra o http://localhost:5000/#/ no navegador para verificar o status da API em execução.
 ```
-
-Abra o [http://localhost:5000/#/](http://localhost:5000/#/) no navegador para verificar o status da API em execução.
